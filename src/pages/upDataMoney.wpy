@@ -1,0 +1,82 @@
+<style lang="less">
+.recharge {
+    border: 2rpx solid gainsboro;
+    width: 95%;
+    height: 550rpx;
+    position: relative;
+    top: 20rpx;
+    left: 2.5%;
+    color: #fff;
+    border-radius: 20rpx;
+    font-size: 30rpx;
+    background: linear-gradient(to right, #f86e09, #f29200, #f86e09);
+}
+.recharge_border {
+    border: 1px solid #fff;
+    width: 98%;
+    margin: 10rpx 1%;
+    border-radius: 20rpx;
+    height: 530rpx;
+}
+.pay_address{
+    margin: 40rpx 40rpx 0 40rpx;
+
+}
+.pay_address_text{
+    font-size: 24rpx;
+    margin-left: 20rpx;
+}
+.money{
+    font-size: 80rpx;
+    margin: 40rpx 40rpx 20rpx 40rpx;
+    float:left;
+}
+.inputs{
+    font-size: 40rpx;
+    height: 90rpx;
+    margin-left: 20rpx;
+    border-bottom: 1px solid #fff;
+    float:right;
+    width: 500rpx;
+}
+.balance {
+    margin: 40rpx 40rpx 0 40rpx;
+    font-size: 24rpx;
+}
+.money_text{
+     font-size: 30rpx;
+}
+
+.btn{
+    background: rgba(0, 0, 0, 0);
+    border: 1px solid #fff;
+    width: 70%;
+    height: 88rpx;
+    margin: 40rpx auto;
+    border-radius: 44rpx;
+    color: #fff;
+}
+</style>
+<template>
+  <view>
+    <rechargereflect />
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import rechargeReflect from '../components/rechargeReflect' // 充值或这体现
+export default class UpDataMoney extends wepy.page {
+  // 生命组件ID
+  components = {
+    // 底部导航
+    rechargereflect: rechargeReflect
+  };
+  // alias example
+  data = {
+    userInfo: {}
+  };
+  methods = {};
+  onLoad() {};
+}
+</script>

@@ -1,0 +1,297 @@
+<style lang="less">
+.appointment {
+  position: absolute;
+  background: linear-gradient(to right, #f86e09, #f29200, #f86e09);
+  color: #fff;
+  font-size: 24rpx;
+  width: 100%;
+  height: 100%;
+  padding: 0 60rpx;
+  box-sizing: border-box;
+}
+
+.title {
+  margin-top: 20rpx;
+  font-weight: bold;
+}
+.appointment_form {
+  color: #fff;
+  font-size: 24rpx;
+}
+.appointment_inputCon{
+  display: flex;
+}
+.appointment_input {
+  // flex: 0;
+  display: inline;
+  border: 4rpx #fff dashed;
+  border-radius: 40rpx;
+  width: 350rpx;
+  height: 80rpx;
+  box-sizing: border-box;
+  padding: 0 40rpx;
+  margin: 30rpx 0;
+  color: #fff;
+}
+
+.appointment_img {
+  position: relative;
+  top: -80rpx;
+  left: 120rpx;
+  width: 230rpx;
+  height: 124rpx;
+}
+
+.appointment_img1 {
+  position: relative;
+  top: -120rpx;
+  left: 200rpx;
+  width: 60rpx;
+  height: 100rpx;
+}
+
+.mod_btn {
+  margin: auto;
+  border-radius: 50%;
+  border: 6rpx solid #fff;
+  background: rgba(0, 0, 0, 0);
+  width: 130rpx;
+  height: 130rpx;
+  color: #fff;
+  font-size: 30rpx;
+  line-height: 120rpx;
+  font-weight: bold;
+}
+// 图片
+.weui-uploader__title{
+clear: both;
+font-size: 12px;
+color:#999;
+}
+.weui-uploader__file{
+margin-left: 80px;
+}
+.weui-uploader__img {
+width: 70px;
+height: 70px;
+float:left;
+}
+.weui-uploader__input-box {
+position: relative;
+margin-right: 9px;
+margin-bottom: 9px;
+width: 70px;
+height: 70px;
+border: 1px solid #d9d9d9;
+}
+.weui-uploader__input-box:before, .weui-uploader__input-box:after {
+content: " ";
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #d9d9d9;
+}
+.weui-uploader__input-box:before {
+width: 2px;
+height: 39.5px;
+}
+.weui-uploader__input-box:after {
+width: 39.5px;
+height: 2px;
+}
+.weui-uploader__input {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+opacity: 0;
+}
+
+</style>
+<template>
+  <view class="mask {{selected?'show':'hidden'}}">
+    <view class="appointment">
+      <view class="title">
+        <view>活动发布</view>
+        <view>{{shopInfo.name}}店铺活动创建</view>
+      </view>
+      <form class="appointment_form" bindsubmit='setAdvertising'>
+          <view class="appointment_inputCon">
+            <input type="text" placeholder='转盘选项-选项1' class="appointment_input" name="nameOne" value="{{n1}}"/>
+            <input type="digit" placeholder='中奖概率-选项1' class="appointment_input" name="probabilityOne" value="{{p1}}"/>
+          </view>
+          <view class="appointment_inputCon">
+            <input type="text" placeholder='转盘选项-选项2' class="appointment_input" name="nameTwo" value="{{n2}}"/>
+            <input type="digit" placeholder='中奖概率-选项2' class="appointment_input" name="probabilityTwo" value="{{p2}}"/>
+          </view>
+          <view class="appointment_inputCon">
+            <input type="text" placeholder='转盘选项-选项3' class="appointment_input" name="nameThree" value="{{n3}}"/>
+            <input type="digit" placeholder='中奖概率-选项3' class="appointment_input" name="probabilityThree" value="{{p3}}"/>
+          </view>
+          <view class="appointment_inputCon">
+            <input type="text" placeholder='转盘选项-选项4' class="appointment_input" name="nameFour" value="{{n4}}"/>
+            <input type="digit" placeholder='中奖概率-选项4' class="appointment_input" name="probabilityFour" value="{{p4}}"/>
+          </view>
+          <view class="appointment_inputCon">
+            <input type="text" placeholder='转盘选项-选项5' class="appointment_input" name="nameFive" value="{{n5}}"/>
+            <input type="digit" placeholder='中奖概率-选项5' class="appointment_input" name="probabilityFive" value="{{p5}}"/>
+          </view>
+          <view class="appointment_inputCon">
+            <input type="text" placeholder='转盘选项-选项6' class="appointment_input" name="nameSix" value="谢谢惠顾"/>
+            <input type="digit" placeholder='中奖概率-选项6' class="appointment_input" name="probabilitySix" value="{{p6}}"/>
+          </view>
+          <button class="mod_btn" formType="submit">提交</button>
+      </form>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+// 校验封装
+import check from '../mixins/check'
+export default class Newlottery extends wepy.page {
+  mixins = [check]
+  config = {
+    'navigationBarTitleText': '活动管理'
+  };
+  // 生命组件ID
+  components = {};
+  // alias example
+  data = {
+    shopInfo: null,
+    userInfo: null,
+    code: '',
+    n1: '',
+    n2: '',
+    n3: '',
+    n4: '',
+    n5: '',
+    n6: '',
+    p1: '',
+    p2: '',
+    p3: '',
+    p4: '',
+    p5: '',
+    p6: ''
+  };
+  methods = {
+    async setAdvertising(event) {
+      // 提交活动信息
+      let name1 = event.detail.value.nameOne
+      let name2 = event.detail.value.nameTwo
+      let name3 = event.detail.value.nameThree
+      let name4 = event.detail.value.nameFour
+      let name5 = event.detail.value.nameFive
+      let probability1 = parseFloat(event.detail.value.probabilityOne)
+      let probability2 = parseFloat(event.detail.value.probabilityTwo)
+      let probability3 = parseFloat(event.detail.value.probabilityThree)
+      let probability4 = parseFloat(event.detail.value.probabilityFour)
+      let probability5 = parseFloat(event.detail.value.probabilityFive)
+      let probabilityAll = probability1 + probability2 + probability3 + probability4 + probability5
+      if (probabilityAll > 100) {
+        wepy.showModal({
+          title: '',
+          content: '概率总和不可大于100',
+          showCancel: false
+        })
+        return
+      } else {
+        this.p6 = 100 - probabilityAll
+        this.$apply()
+      }
+      if (this.check.isNull(name1) || this.check.isNull(name2) || this.check.isNull(name3) || this.check.isNull(name4) || this.check.isNull(name5)) {
+        wepy.showModal({
+          title: '',
+          content: '请输抽奖选项',
+          showCancel: false
+        })
+        return
+      }
+      if (this.check.isMoney(probability1) || this.check.isMoney(probability2) || this.check.isMoney(probability3) || this.check.isMoney(probability4) || this.check.isMoney(probability5)) {
+        wepy.showModal({
+          title: '',
+          content: '请输概率',
+          showCancel: false
+        })
+        return
+      }
+      await wepy.login().then(res => {
+        this.code = res.code
+      })
+      // 发送请求,发布活动
+      await wx.request({
+        url: `${this.$parent.globalData.requestUrl}/activity/store`,
+        method: 'POST',
+        data: {
+          code: this.code,
+          one_thing: name1,
+          two_thing: name2,
+          three_thing: name3,
+          four_thing: name4,
+          five_thing: name5,
+          one: probability1,
+          two: probability2,
+          three: probability3,
+          four: probability4,
+          five: probability5
+        },
+        success: data => {
+          if (data.statusCode === 201) {
+            wepy.showModal({
+              title: '',
+              content: '创建活动成功',
+              showCancel: false
+            })
+            // 两秒后返回上一页
+            setTimeout(e => {
+              wx.navigateBack({ changed: true })
+            }, 2000)
+            return
+          }
+          if (data.statusCode === 400) {
+            data = data.data
+            wepy.showModal({
+              title: '',
+              content: data.message,
+              showCancel: false
+            })
+          }
+        }
+      })
+    }
+  };
+  async onLoad() {
+    this.shopInfo = this.$parent.globalData.shopInfo
+    wepy.login().then(res => {
+      this.code = res.code
+      // 查看广告页抽奖状态，控制跳转按钮是否显示
+      wx.request({
+        url: `${this.$parent.globalData.requestUrl}/lottery/show`,
+        method: 'POST',
+        data: {
+          code: this.code,
+          uuid: this.$parent.globalData.uuid
+        },
+        success: data => {
+          // 400为无效活动，活动未新建，不显示转盘跳转按钮
+          if (data.data.status_code === 200) {
+            let select = data.data.data
+            this.n1 = select[0].name
+            this.n2 = select[1].name
+            this.n3 = select[2].name
+            this.n4 = select[3].name
+            this.n5 = select[4].name
+            this.luckDrawData = true
+            this.$apply()
+            this.$parent.globalData.awards = data.data.data
+          } else {
+            this.$parent.globalData.lotteryMessage = data.data.message
+          }
+        }
+      })
+    })
+  };
+}
+</script>

@@ -1,0 +1,176 @@
+<style lang="less">
+.recharge {
+    border: 2rpx solid gainsboro;
+    width: 95%;
+    height: 550rpx;
+    position: relative;
+    top: 20rpx;
+    left: 2.5%;
+    color: #fff;
+    border-radius: 20rpx;
+    font-size: 30rpx;
+    background: linear-gradient(to right, #f86e09, #f29200, #f86e09);
+}
+.recharge_border {
+    border: 1px solid #fff;
+    width: 98%;
+    margin: 10rpx 1%;
+    border-radius: 20rpx;
+    height: 530rpx;
+}
+.pay_address{
+    margin: 40rpx 40rpx 0 40rpx;
+
+}
+.pay_address_text{
+    font-size: 24rpx;
+    margin-left: 20rpx;
+}
+.money{
+    font-size: 80rpx;
+    margin: 40rpx 40rpx 20rpx 40rpx;
+    float:left;
+}
+.inputs{
+    font-size: 40rpx;
+    height: 90rpx;
+    margin-left: 20rpx;
+    border-bottom: 1px solid #fff;
+    float:right;
+    width: 500rpx;
+}
+.balance {
+    margin: 40rpx 40rpx 0 40rpx;
+    font-size: 24rpx;
+}
+.money_text{
+     font-size: 30rpx;
+}
+
+.btn{
+    background: rgba(0, 0, 0, 0);
+    border: 1px solid #fff;
+    width: 70%;
+    height: 88rpx;
+    margin: 40rpx auto;
+    border-radius: 44rpx;
+    color: #fff;
+}
+</style>
+<template>
+    <view class='recharge'>
+    <view hover-class='none' class="recharge_border">
+        <view class="pay_address">
+            <text>到账地址</text>
+            <text class="pay_address_text">{{arrivalAddress}}</text>
+        </view>
+        <view class="pay_address">
+            <text>{{typeName}}金额</text>
+        </view>
+        <form bindsubmit='upDataMoney'>
+          <view class="money">
+              ￥
+              <input class="inputs" type='text' name="upDataM" placeholder="{{requestUrl}}" />
+          </view>
+          <view class="balance">
+              当前红包余额
+              <text class="money_text">{{balance}}</text>元
+          </view>
+          <button formType="submit" class="btn">{{typeName}}</button>
+        </form>
+    </view>
+</view>
+
+</template>
+
+<script>
+import wepy from 'wepy'
+import check from '../mixins/check' // 校验封装
+export default class RechargReflect extends wepy.component {
+  mixins = [check]
+  props = {
+    // 静态传值
+    type: String,
+    // 父向子单向动态传值
+    userId: {
+      type: String,
+      default: null
+    },
+    // 余额
+    balance: {
+      type: Number,
+      default: null
+    },
+    // 到账地址
+    arrivalAddress: {
+      type: String,
+      default: null
+    },
+    // 到账地址
+    requestUrl: {
+      type: String,
+      default: null
+    }
+  };
+  data = {
+    userInfo: {},
+    typeName: '',
+    requestUrl: this.requestUrl
+  };
+  methods = {
+    // 获取值示例
+    tapName(event) {
+      // 获取当前点击元素的data-id值：event.currentTarget.dataset.id
+      console.log(event.currentTarget.dataset.id)// output: 1
+      console.log(event.currentTarget.dataset.title)// output: wepy
+      console.log(event.currentTarget.dataset.other)// output: otherparams
+    },
+    // 提交数据 isNull  isMoney
+    async upDataMoney(event) {
+      let upDataM = event.detail.value.upDataM
+      if (this.check.isNull(upDataM)) {
+        wepy.showModal({
+          title: '',
+          content: '请输入金额',
+          showCancel: false
+        })
+        return
+      }
+      if (this.check.isMoney(upDataM)) {
+        wepy.showModal({
+          title: '',
+          content: '请输入正确金额',
+          showCancel: false
+        })
+        return
+      }
+      await wepy.login().then(res => {
+        this.code = res.code
+      })
+      await wx.request({
+        url: `${this.$parent.globalData.requestUrl + this.requestUrl}`,
+        method: 'POST',
+        data: {
+          code: this.code
+        },
+        success: data => {
+          console.log(data)
+        }
+      })
+    }
+  };
+  onLoad() {
+    if (this.type === 'withdraw') {
+      // 提现
+      this.typeName = '提现'
+      this.sonRequestUrl = 'testUrl/1'
+    } else if (this.type === 'recharge') {
+      // 充值
+      this.typeName = 'testUrl/2'
+      this.sonRequestUrl = ''
+    }
+    // 异步函数中更新数据的时候，必须手动调用$apply方法，才会触发脏数据检查流程的运行
+    this.$apply()
+  };
+}
+</script>

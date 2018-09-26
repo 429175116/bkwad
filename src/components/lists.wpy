@@ -1,0 +1,88 @@
+<style lang="less">
+.winDetail {
+    width: 95%;
+    border: 1px solid #eee;
+    border-radius: 20rpx;
+    height: 160rpx;
+    margin: 20rpx 2.5%;
+    color: #333;
+    box-sizing: border-box;
+    padding: 30rpx 0;
+}
+
+.winDetail_img image {
+    width: 78rpx;
+    height: 78rpx;
+    float: left;
+    margin-left: 20rpx;
+    border-radius: 50%;
+    margin-top: 10rpx;
+}
+
+.winDetail_center {
+    float: left;
+    margin-left: 20rpx;
+    font-size: 40rpx;
+}
+
+.winDetail_text {
+    font-size: 28rpx;
+    margin-top: 10rpx;
+}
+
+.winDetail_right {
+    float: right;
+    margin-right: 20rpx;
+    text-align: right;
+    font-size: 20rpx;
+    line-height: 35rpx;
+}
+
+.winDetail_title {
+    font-size: 26rpx;
+    color: #ef3f22;
+}
+</style>
+<template>
+  <view class="winDetail">
+      <view class="winDetail_img">
+          <image src="/img/index_main.png" class=""/>
+      </view>
+      <view class="winDetail_center">
+          <view>昵称</view>
+          <view class="winDetail_text">门店地址</view>
+      </view>
+      <view class="winDetail_right">
+          <view>2018.2.3</view>
+          <view>10:00</view>
+          <view class="winDetail_title">二等奖-电饭煲</view>
+      </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class Lists extends wepy.component {
+  data = {
+    userInfo: {}
+  };
+  props = {
+    // 静态传值
+    shopInfo: String,
+    // 父向子单向动态传值
+    syncTitle: {
+      type: String,
+      default: 'null'
+    },
+    twoWayTitle: {
+      type: String,
+      default: 'nothing',
+      twoWay: true
+    }
+  };
+  methods = {};
+  onLoad() {
+    console.log('onLoad')
+  };
+}
+</script>

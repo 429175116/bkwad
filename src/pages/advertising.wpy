@@ -1,0 +1,297 @@
+<style lang="less">
+.appointment {
+  position: absolute;
+  background: linear-gradient(to right, #f86e09, #f29200, #f86e09);
+  color: #fff;
+  font-size: 24rpx;
+  width: 100%;
+  height: 100%;
+  padding: 0 60rpx;
+  box-sizing: border-box;
+}
+
+.title {
+  margin-top: 20rpx;
+  font-weight: bold;
+}
+.appointment_form {
+  color: #fff;
+  font-size: 24rpx;
+}
+
+.appointment_input {
+  border: 4rpx #fff dashed;
+  border-radius: 40rpx;
+  height: 80rpx;
+  box-sizing: border-box;
+  padding: 0 40rpx;
+  margin: 30rpx 0;
+  color: #fff;
+}
+
+.appointment_img {
+  position: relative;
+  top: -80rpx;
+  left: 120rpx;
+  width: 230rpx;
+  height: 124rpx;
+}
+
+.appointment_img1 {
+  position: relative;
+  top: -120rpx;
+  left: 200rpx;
+  width: 60rpx;
+  height: 100rpx;
+}
+
+.mod_btn {
+  margin: auto;
+  border-radius: 50%;
+  border: 6rpx solid #fff;
+  background: rgba(0, 0, 0, 0);
+  width: 130rpx;
+  height: 130rpx;
+  color: #fff;
+  font-size: 30rpx;
+  line-height: 120rpx;
+  font-weight: bold;
+}
+// 图片
+.weui-uploader__title{
+clear: both;
+font-size: 12px;
+color:#999;
+}
+.weui-uploader__file{
+margin-left: 80px;
+}
+.weui-uploader__img {
+width: 70px;
+height: 70px;
+float:left;
+}
+.weui-uploader__input-box {
+position: relative;
+margin-right: 9px;
+margin-bottom: 9px;
+width: 70px;
+height: 70px;
+border: 1px solid #d9d9d9;
+}
+.weui-uploader__input-box:before, .weui-uploader__input-box:after {
+content: " ";
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #d9d9d9;
+}
+.weui-uploader__input-box:before {
+width: 2px;
+height: 39.5px;
+}
+.weui-uploader__input-box:after {
+width: 39.5px;
+height: 2px;
+}
+.weui-uploader__input {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+opacity: 0;
+}
+</style>
+<template>
+  <view class="mask {{selected?'show':'hidden'}}">
+    <view class="appointment">
+      <view class="title">
+        <view>广告发布,活动发布</view>
+        <view>{{shopInfo.name}}店铺广告创建</view>
+        <view>储蓄金：{{shopInfo.reserve}}</view>
+      </view>
+      <form class="appointment_form" bindsubmit='setAdvertising'>
+          <input type="text" placeholder='广告名称' class="appointment_input" name="name" value="{{name}}"/>
+          <input type="digit" placeholder='红包额度' class="appointment_input" name="money" value="{{money}}"/>
+          <view class="street_detail" id="adinfoP">
+            <text class="tit">添加照片：</text>
+              <view class="weui-cell">
+                <view class="weui-cell__bd">
+                  <view class="weui-uploader">
+                  <view class="weui-uploader__hd">
+                  <view class="weui-uploader__title"></view>
+                  </view>
+                    <view class="weui-uploader__bd" style="margin-left:20px">
+                      <view class="weui-uploader__file">
+                        <image class="weui-uploader__img" name="image" src="{{image}}" data-image="{{image}}" @tap="previewImage" />
+                      </view>
+                      <!-- isShow 这个是判断是否进行触发点隐藏操作-->
+                      <view class="weui-uploader__input-box {{isShow?'true':'hideTrue'}}">
+                        <view class="weui-uploader__input" @tap="chooseImage"></view>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+          </view>
+          <button class="mod_btn" formType="submit">提交</button>
+      </form>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+// 校验封装
+import check from '../mixins/check'
+export default class Advertising extends wepy.page {
+  mixins = [check]
+  config = {
+    'navigationBarTitleText': '活动管理'
+  };
+  // 生命组件ID
+  components = {};
+  // alias example
+  data = {
+    shopInfo: null,
+    reserveList: null,
+    userInfo: null,
+    code: '',
+    image: '',
+    imgSize: 0,
+    advertisingName: '',
+    money: ''
+  };
+  methods = {
+    previewImage(e) {
+      var current = e.target.dataset.src
+      wx.previewImage({
+        current: current,
+        urls: this.data.pics
+      })
+    },
+    chooseImage() {
+      wx.chooseImage({
+        // 最多可以选择的图片张数，默认9
+        count: 1,
+        // original 原图，compressed 压缩图，默认二者都有
+        sizeType: ['original', 'compressed'],
+        // album 从相册选图，camera 使用相机，默认二者都有
+        sourceType: ['album', 'camera'],
+        success: res => {
+          this.imgSize = res.tempFiles[0].size
+          // 判断图片大小1024000
+          if (this.imgSize > 1024000) {
+            wepy.showModal({
+              title: '',
+              content: '上传图片大小不可大于1兆(1M)',
+              showCancel: false
+            })
+            // return后不会执行添加图片对象部分，form表单请求出可以不做校验
+            return
+          }
+          var tempFilePaths = res.tempFilePaths
+          // 获取图片路径
+          this.image = tempFilePaths[0]
+          this.$apply()
+        },
+        fail() {},
+        complete() {}
+      })
+    },
+    async setAdvertising(event) {
+      // 提交活动信息
+      let newAdvertisingName = event.detail.value.name
+      let newMoney = event.detail.value.money
+      let newImage = this.image
+      let reserve = this.shopInfo.reserve
+      newMoney = parseFloat(newMoney)
+      reserve = parseFloat(reserve)
+      if (newMoney <= 0) {
+        wepy.showModal({
+          title: '',
+          content: '红包金额不可小于等于0',
+          showCancel: false
+        })
+        return
+      }
+      if (this.check.isNull(newAdvertisingName)) {
+        wepy.showModal({
+          title: '',
+          content: '请输入广告名称',
+          showCancel: false
+        })
+        return
+      }
+      if (this.check.isMoney(newMoney)) {
+        wepy.showModal({
+          title: '',
+          content: '输入红包金额',
+          showCancel: false
+        })
+        return
+      }
+      if (reserve < newMoney) {
+        wepy.showModal({
+          title: '',
+          content: '储蓄金不足',
+          showCancel: false
+        })
+        return
+      }
+      if (this.check.isNull(newImage)) {
+        wepy.showModal({
+          title: '',
+          content: '请选择图片',
+          showCancel: false
+        })
+        return
+      }
+      await wepy.login().then(res => {
+        this.code = res.code
+      })
+      // 发送请求,发布广告
+      await wx.uploadFile({
+        url: `${this.$parent.globalData.requestUrl}/ad/store`,
+        header: {
+          "Content-Type": "multipart/form-data"
+        },
+        filePath: newImage,
+        name: 'image',
+        formData: {
+          code: this.code,
+          title: newAdvertisingName,
+          step: newMoney
+        },
+        success: data => {
+          if (data.statusCode === 201) {
+            this.$parent.globalData.uuid = ''
+            wepy.showModal({
+              title: '',
+              content: '创建广告成功',
+              showCancel: false
+            })
+            // 两秒后返回上一页
+            setTimeout(e => {
+              wx.navigateBack({ changed: true })
+            }, 2000)
+            return
+          }
+          if (data.statusCode === 400) {
+            data = data.data
+            wepy.showModal({
+              title: '',
+              content: data.message,
+              showCancel: false
+            })
+          }
+        }
+      })
+    }
+  };
+  async onLoad() {
+    this.shopInfo = this.$parent.globalData.shopInfo
+  };
+}
+</script>

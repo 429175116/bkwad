@@ -1,0 +1,59 @@
+<style lang="less">
+#getUserInfo{
+  position: fixed;
+  top: 0;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0rpx !important;
+  z-index: 999;
+  opacity: .0;
+}
+</style>
+<template>
+<!-- 授权按钮 -->
+  <view>
+    <button open-type="getUserInfo" class='{{authorizationButton}}' id='getUserInfo' lang="zh_CN" @getuserinfo="onGotUserInfo">授权按钮</button>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Author extends wepy.component {
+  data = {
+    userInfo: {},
+    authorizationButton: 'show'
+  };
+  methods = {
+    goIndex() {
+      this.$emit('childFn', '/pages/index')
+    },
+    goUser() {
+      this.$emit('childFn', '/pages/user')
+    },
+    onGotUserInfo(e) {
+      // 获取用户信息
+      this.userInfo = e.detail.userInfo
+      // 用户信息从组件返回至页面,执行用户信息存储
+      this.$emit('returnUserInfo', this.userInfo)
+      // 判断用户昵称是否为空
+      if (this.userInfo.nickName) {
+        this.authorizationButton = 'hide'
+        // 数据生效
+        this.$apply()
+      }
+    }
+  };
+  async onLoad(e) {
+    // 获取用户信息
+    this.userInfo = await wepy.getUserInfo()
+    this.userInfo = this.userInfo.rawData
+    // 判断用户信息是否为空
+    if (this.userInfo) {
+      this.authorizationButton = 'hide'
+      // 数据生效
+      this.$apply()
+    }
+  };
+}
+</script>

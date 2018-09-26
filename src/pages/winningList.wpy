@@ -1,0 +1,180 @@
+<style lang="less">
+.winDetail {
+    width: 95%;
+    border: 1px solid #eee;
+    border-radius: 20rpx;
+    height: 160rpx;
+    margin: 20rpx 2.5%;
+    color: #333;
+    box-sizing: border-box;
+    padding: 30rpx 0;
+}
+
+.winDetail_img image {
+    width: 78rpx;
+    height: 78rpx;
+    float: left;
+    margin-left: 20rpx;
+    border-radius: 50%;
+    margin-top: 10rpx;
+}
+
+.winDetail_center {
+    float: left;
+    margin-left: 20rpx;
+    font-size: 40rpx;
+}
+
+.winDetail_center view {
+    width: 400rpx;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.winDetail_text {
+    font-size: 28rpx;
+    margin-top: 10rpx;
+}
+
+.winDetail_right {
+    float: right;
+    margin-right: 20rpx;
+    text-align: right;
+    font-size: 20rpx;
+    line-height: 35rpx;
+}
+
+.winDetail_title {
+    font-size: 26rpx;
+    color: #ef3f22;
+}
+</style>
+<template>
+  <view>
+    <repeat for="{{reserveList}}" key="index" index="index" item="item">
+      <view class="winDetail">
+        <view class="winDetail_img">
+          <image src="{{userInfo.avatarUrl}}" class=""/>
+        </view>
+        <view class="winDetail_center">
+          <view>店铺:{{item.name}}</view>
+          <view class="winDetail_text" @tap="dialPhone" data-phone="{{item.phone}}">点击拨打咨询:{{item.phone}}</view>
+        </view>
+        <view class="winDetail_right">
+          <view>{{item.date}}</view>
+          <view>{{item.time}}</view>
+          <view class="winDetail_title">奖品:{{item.prize}}</view>
+        </view>
+      </view>
+    </repeat>
+    <view class="listMessage hide {{prompt?'show':''}}">已无更多数据</view>
+    <view class="listMessage hide {{listShow?'show':''}}">暂无列表数据</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class WinningList extends wepy.page {
+  config = {
+    'navigationBarTitleText': '我的奖品'
+  };
+  // 生命组件ID
+  components = {};
+  // alias example
+  data = {
+    motto: 'Hello World',
+    reserveList: null,
+    userInfo: null,
+    prompt: false,
+    listShow: false
+  };
+  methods = {};
+  async onLoad() {
+    this.userInfo = this.$parent.globalData.userInfo
+    await wepy.login().then(res => {
+      this.code = res.code
+    })
+    await wx.request({
+      url: `${this.$parent.globalData.requestUrl}/lottery/my_prize`,
+      method: 'POST',
+      data: {
+        code: this.code
+      },
+      success: data => {
+        if (data.statusCode === 200) {
+          let reserveList = data.data.data
+          let allTime = ''
+          if (reserveList.length <= 0) {
+            this.listShow = true
+            this.$apply()
+            return
+          }
+          for (let i = 0; i < reserveList.length; i++) {
+            allTime = reserveList[i].created_at
+            allTime = allTime.split(' ')
+            reserveList[i]['date'] = allTime[0]
+            reserveList[i]['time'] = allTime[1]
+          }
+          this.reserveList = reserveList
+          this.$apply()
+          // 获取下一页的请求Id
+          this.getUrl = data.data.meta.pagination.links.next
+        }
+      }
+    })
+  };
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  async onReachBottom() {
+    if (!this.getUrl) {
+      this.prompt = true
+      this.$apply()
+      return
+    }
+    await wepy.login().then(res => {
+      this.code = res.code
+    })
+    await wx.request({
+      url: this.getUrl,
+      method: 'POST',
+      data: {
+        code: this.code
+      },
+      success: data => {
+        if (data.statusCode === 200) {
+          let reserveList = data.data.data
+          let allTime = ''
+          for (let i = 0; i < reserveList.length; i++) {
+            allTime = reserveList[i].created_at
+            allTime = allTime.split(' ')
+            reserveList[i]['date'] = allTime[0]
+            reserveList[i]['time'] = allTime[1]
+          }
+          // 将新的请求结果加入原有数组  concat连接两个或更多的数组，并返回结果。
+          this.reserveList = this.reserveList.concat(reserveList)
+          this.$apply()
+          // 更新下一页请求地址
+          this.getUrl = data.data.meta.pagination.links.next
+        }
+      }
+    })
+  };
+  // 拨打商家电话
+  dialPhone(e) {
+    let phone = e.target.dataset.phone
+    if (phone) {
+      wx.makePhoneCall({
+        phoneNumber: phone,
+        success: function () {
+          console.log('拨打电话成功！')
+        },
+        fail: function () {
+          console.log('拨打电话失败！')
+        }
+      })
+    }
+  }
+}
+</script>

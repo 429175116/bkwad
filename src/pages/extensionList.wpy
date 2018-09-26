@@ -1,0 +1,26 @@
+<style lang="less">
+
+</style>
+<template>
+    <view>
+        <orderList />
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import lists from '../components/lists' // 底部导航
+export default class OrderList extends wepy.page {
+  // 生命组件ID
+  components = {
+    // 底部导航
+    orderList: lists
+  };
+  // alias example
+  data = {
+    userInfo: {}
+  };
+  methods = {};
+  onLoad() {};
+}
+</script>
