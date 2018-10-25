@@ -183,7 +183,9 @@ export default class ReserveInList extends wepy.page {
           this.reserveList = reserveList
           this.$apply()
           // 获取下一页的请求Id
-          this.getUrl = data.data.meta.pagination.links.next
+          if (data.data.meta.pagination.links) {
+            this.getUrl = data.data.meta.pagination.links.next
+          }
         }
       }
     })
@@ -221,7 +223,9 @@ export default class ReserveInList extends wepy.page {
           this.reserveList = reserveList
           this.$apply()
           // 获取下一页的请求Id
-          this.getUrl = data.data.meta.pagination.links.next
+          if (data.data.meta.pagination.links) {
+            this.getUrl = data.data.meta.pagination.links.next
+          }
         }
       }
     })
@@ -258,7 +262,9 @@ export default class ReserveInList extends wepy.page {
           this.reserveList = this.reserveList.concat(reserveList)
           this.$apply()
           // 更新下一页请求地址
-          this.getUrl = data.data.meta.pagination.links.next
+          if (data.data.meta.pagination.links) {
+            this.getUrl = data.data.meta.pagination.links.next
+          }
         }
       }
     })

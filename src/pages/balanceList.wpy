@@ -174,7 +174,9 @@ export default class BalanceList extends wepy.page {
           this.withdrawList = withdrawList
           this.$apply()
           // 获取下一页的请求Id
-          this.getUrl = data.data.meta.pagination.links.next
+          if (data.data.meta.pagination.links) {
+            this.getUrl = data.data.meta.pagination.links.next
+          }
         }
       }
     })
@@ -213,7 +215,9 @@ export default class BalanceList extends wepy.page {
           this.withdrawList = withdrawList
           this.$apply()
           // 获取下一页的请求Id
-          this.getUrl = data.data.meta.pagination.links.next
+          if (data.data.meta.pagination.links) {
+            this.getUrl = data.data.meta.pagination.links.next
+          }
         }
       }
     })

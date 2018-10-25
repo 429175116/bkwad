@@ -52,7 +52,7 @@
     <view class="shopInfo">
       <view class="shopName">{{title}}</view>
       <view @tap="dialPhone">电话:{{shopInfo.phone}}</view>
-      <view>地址:{{total}}</view>
+      <view>广告余额:{{total}}</view>
     </view>
     <view class="buy">
       <!-- <view class="recharge" @tap="setShopCart">充值</view> -->
@@ -85,7 +85,7 @@ export default class Addetails extends wepy.page {
     title: '',
     id: '',
     uuid: '',
-    total: 0
+    total: 0,
     userInfo: null,
     shopInfo: null
   };

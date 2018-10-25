@@ -115,7 +115,9 @@ export default class extends wepy.app {
     imgUrlMain: 'https://bkwhb.beaconway.cn/uploads/images/index_main.jpg',
     userShopInfo: null,
     shopInfo: null,
-    guangGao: null
+    guangGao: null,
+    navImg: ['index1', 'user'],
+    navAction: ['action', 'noAction']
   };
 
   testFunctiong() {

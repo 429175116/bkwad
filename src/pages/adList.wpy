@@ -119,13 +119,14 @@ export default class Adlist extends wepy.page {
         code: this.code
       },
       success: data => {
-        console.log(data);
         if (data.statusCode === 200) {
           let adList = data.data.data
           this.adList = adList
           this.$apply()
           // 获取下一页的请求Id
-          this.nextUrl = data.data.meta.pagination.links.next
+          if (data.data.meta.pagination.links) {
+            this.nextUrl = data.data.meta.pagination.links.next
+          }
         }
       }
     })
@@ -153,7 +154,9 @@ export default class Adlist extends wepy.page {
           this.adList = this.adList.concat(adList)
           this.$apply()
           // 更新下一页请求地址
-          this.nextUrl = data.data.meta.pagination.links.next
+          if (data.data.meta.pagination.links) {
+            this.nextUrl = data.data.meta.pagination.links.next
+          }
         }
       }
     })
