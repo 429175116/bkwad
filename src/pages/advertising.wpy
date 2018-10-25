@@ -114,7 +114,8 @@ opacity: 0;
       </view>
       <form class="appointment_form" bindsubmit='setAdvertising'>
           <input type="text" placeholder='广告名称' class="appointment_input" name="name" value="{{name}}"/>
-          <input type="digit" placeholder='红包额度' class="appointment_input" name="money" value="{{money}}"/>
+          <input type="digit" placeholder='红包总金额' class="appointment_input" name="money" value="{{money}}"/>
+          <input type="digit" placeholder='红包发放数量' class="appointment_input" name="num" value="{{num}}"/>
           <view class="street_detail" id="adinfoP">
             <text class="tit">添加照片：</text>
               <view class="weui-cell">
@@ -202,20 +203,16 @@ export default class Advertising extends wepy.page {
     },
     async setAdvertising(event) {
       // 提交活动信息
+      // 红包个数
+      let num = event.detail.value.num
+      // 广告名
       let newAdvertisingName = event.detail.value.name
-      let newMoney = event.detail.value.money
+      // 红包总金额
+      let total = event.detail.value.money
       let newImage = this.image
+      // 储蓄金
       let reserve = this.shopInfo.reserve
-      newMoney = parseFloat(newMoney)
       reserve = parseFloat(reserve)
-      if (newMoney <= 0) {
-        wepy.showModal({
-          title: '',
-          content: '红包金额不可小于等于0',
-          showCancel: false
-        })
-        return
-      }
       if (this.check.isNull(newAdvertisingName)) {
         wepy.showModal({
           title: '',
@@ -224,15 +221,31 @@ export default class Advertising extends wepy.page {
         })
         return
       }
-      if (this.check.isMoney(newMoney)) {
+      if (this.check.isMoney(total)) {
         wepy.showModal({
           title: '',
-          content: '输入红包金额',
+          content: '输入红包总金额',
           showCancel: false
         })
         return
       }
-      if (reserve < newMoney) {
+      if (total <= 0) {
+        wepy.showModal({
+          title: '',
+          content: '红包金额不可小于等于0',
+          showCancel: false
+        })
+        return
+      }
+      if (this.check.isNum(num)) {
+        wepy.showModal({
+          title: '',
+          content: '红包数量必须为整数',
+          showCancel: false
+        })
+        return
+      }
+      if (reserve < total) {
         wepy.showModal({
           title: '',
           content: '储蓄金不足',
@@ -248,6 +261,20 @@ export default class Advertising extends wepy.page {
         })
         return
       }
+      num = parseInt(num)
+      total = parseFloat(total)
+      // 单个红包金额
+      let step = total / num
+      // 保留两位小数
+      step = Math.round(step * 100) / 100
+      // 判断单个红包金额是否小于0.01
+      if (step < 0.01) {
+        wepy.showModal({
+          title: '',
+          content: '红包金额过小或个数过多,单个红包不可小于0.01',
+          showCancel: false
+        })
+      }
       await wepy.login().then(res => {
         this.code = res.code
       })
@@ -261,8 +288,9 @@ export default class Advertising extends wepy.page {
         name: 'image',
         formData: {
           code: this.code,
-          title: newAdvertisingName,
-          step: newMoney
+          title: newAdvertisingName, // 广告名称
+          step: step, // 单个红包金额
+          total: total // 总数金额
         },
         success: data => {
           if (data.statusCode === 201) {

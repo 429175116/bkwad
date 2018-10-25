@@ -66,28 +66,29 @@ export default class extends wepy.app {
   // -----json部分-----
   config = {
     pages: [
-      'pages/index',
-      'pages/withdraw',
-      'pages/winningList',
-      'pages/orderList',
-      'pages/shop',
-      'pages/user',
+      'pages/index', // 首页
+      'pages/withdraw', // 提现
+      'pages/winningList', // 我的奖品
+      'pages/orderList', // 我的预约
+      'pages/shop', // 店铺管理
+      'pages/user', // 个人中心
+      'pages/adList', // 广告列表
       'pages/upDataMoney',
       'pages/extensionList',
       'pages/grantList',
-      'pages/turntable',
-      'pages/shopRecharge',
-      'pages/shopWithdraw',
-      'pages/balanceList',
-      'pages/reserveList',
-      'pages/balanceToReserve',
-      'pages/advertising',
-      'pages/userWalletIn',
-      'pages/userWalletOut',
-      'pages/newLottery',
-      'pages/shopReservation',
-      'pages/shopUserLottery',
-      'pages/description'
+      'pages/turntable', // 抽奖
+      'pages/shopRecharge', // 余额充值
+      'pages/shopWithdraw', // 提现
+      'pages/balanceList', // 余额明细
+      'pages/reserveList', // 储蓄金明细
+      'pages/balanceToReserve', // 余额转储蓄金
+      'pages/advertising', // 活动管理
+      'pages/userWalletIn', // 钱包入账明细
+      'pages/userWalletOut', // 钱包出账明细
+      'pages/newLottery', // 活动管理
+      'pages/shopReservation', // 预约客户
+      'pages/shopUserLottery', // 中奖用户列表
+      'pages/description' // 平台使用说明
     ],
     window: {
       backgroundTextStyle: 'light',

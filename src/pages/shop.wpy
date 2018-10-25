@@ -227,6 +227,11 @@ button::after {
         <text>发布广告</text>
         <image src='/img/jiantou1.png' class="bottom_right" />
       </view>
+      <view  @tap="goAdList" class='bottom'>
+        <image src='/img/tui.png' class="bottom_left" />
+        <text>广告列表</text>
+        <image src='/img/jiantou1.png' class="bottom_right" />
+      </view>
       <!-- 此功能暂时屏蔽掉 -->
       <!-- <view  @tap="newLottery" class='bottom'>
         <image src='/img/luckyDraw.png' class="bottom_left" />
@@ -394,6 +399,10 @@ export default class Shop extends wepy.page {
   // 发放明细
   grantList() {
     this.$navigate('/pages/grantList')
+  };
+  // 广告列表
+  goAdList() {
+    this.$navigate('/pages/adList')
   };
   // 广告页
   goAdvertising() {

@@ -1,7 +1,7 @@
 {
 	"description": "贝肯伟贝肯伟共享广告平台",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": false,
 		"minified": false,
@@ -10,6 +10,6 @@
 	"compileType": "miniprogram",
 	"appid": "wx85ae2745ca3ac253",
 	"projectname": "bkwad",
-	"miniprogramRoot": "./dist",
+	"miniprogramRoot": "dist/",
 	"condition": {}
 }
