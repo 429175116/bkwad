@@ -47,17 +47,36 @@
 }
 
 .luckDraw {
-  width: 200rpx;
-  height: 120rpx;
-  line-height: 120rpx;
+  width:135rpx;
+  height:93rpx;
+  line-height:93rpx;
+  background-color:rgba(0, 0, 0, 0.3);
+  border-radius:100rpx 0 0 100rpx;
+  position:fixed;
+  bottom:356rpx;
+  right:0rpx;
+  text-align:center;
+  font-size:25rpx;
+  color:#fff;
+}
+.button-hover[type=primary] {
+background-color: rgba(0, 0, 0, 0.3);
+}
+button[type=primary] {
+  color:#FFFFFF;
   background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 100rpx 0 0 100rpx;
+}
+
+.shareIt{
+  width: 90rpx;
+  height: 90rpx;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
   position: fixed;
-  bottom: 310rpx;
-  right: 0rpx;
+  bottom: 250rpx;
+  right: 20rpx;
   text-align: center;
-  font-size: 30rpx;
-  color: #fff;
+  padding: 0;
 }
 
 .luckDraw_img {
@@ -66,8 +85,8 @@
 }
 
 .service {
-  width: 120rpx;
-  height: 120rpx;
+  width: 90rpx;
+  height: 90rpx;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 50%;
   position: fixed;
@@ -75,11 +94,17 @@
   right: 20rpx;
   text-align: center;
 }
-
+ .shareIt image {
+  width: 60rpx;
+  height: 60rpx;
+  margin: 0;
+  vertical-align:middle;
+}
 .service_img {
-  width: 80rpx;
-  height: 80rpx;
-  margin-top: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  margin-top: 15rpx;
+  vertical-align:middle;
 }
 
 .appointment {
@@ -199,6 +224,12 @@
       <!-- <view class="luckDraw {{luckDrawData?'show':'hidden'}}">
         <image src="/img/luckDraw.png" @tap="goTurntable" class="luckDraw_img" />
       </view> -->
+      <!-- <view class="luckDraw" @tap="goDescription">
+        使用说明
+      </view> -->
+      <button class="shareIt" type="primary" open-type="share" data-name="pageShare" id="share">
+        <image src="/img/shareIt.png" @tap="dialPhone" class="service_img" />
+      </button>
       <view class="luckDraw" @tap="goDescription">
         使用说明
       </view>
@@ -393,6 +424,7 @@ export default class Index extends wepy.page {
           this.uuid = data.uuid
           this.address = data.address
           this.shopName = data.name
+          this.title = data.title
           this.$parent.globalData.uuid = data.uuid
           this.$apply()
           // 转盘展示功能暂时屏蔽
@@ -469,8 +501,9 @@ export default class Index extends wepy.page {
     let url = currentPage.route // 当前页面url
     url = `${url}?share=${this.thisShare}&uuid=${this.uuid}`
     return {
-      title: '',
+      title: this.title,
       desc: '',
+      imageUrl: this.image,
       path: url
     }
   };

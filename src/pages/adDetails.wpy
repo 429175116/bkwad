@@ -1,0 +1,138 @@
+<style lang="less">
+.activity{
+  width: 100%;
+}
+.buy{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 100rpx;
+  color: #fff;
+  font-size: 30rpx;
+  text-align: center;
+  display: flex;
+  line-height: 100rpx;
+}
+.buy .recharge{
+  width: 375rpx;
+  height: 100rpx;
+  background-color: #f39900;
+}
+.buy .shareIt{
+  width: 750rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  background-color: #ff4a00;
+}
+
+.title {
+  margin-top: 20rpx;
+  font-weight: bold;
+}
+.shopInfo{
+  height: auto;
+  color: #999;
+  font-size: 30rpx;
+  padding: 30rpx;
+  margin-bottom:100rpx;
+}
+.shopName{
+  font-weight: 700
+}
+.shopInfo view{
+  height: auto;
+  min-height: 50rpx;
+  line-height: 50rpx;
+}
+</style>
+<template>
+  <view>
+    <!-- 活动主图 -->
+    <image src="{{adImage}}" style="width:{{autoW}}px;height:{{autoH}}px" bindload='autoImage' class="activity {{indexloading}}" />
+    <view class="shopInfo">
+      <view class="shopName">{{title}}</view>
+      <view @tap="dialPhone">电话:{{shopInfo.phone}}</view>
+      <view>地址:{{total}}</view>
+    </view>
+    <view class="buy">
+      <!-- <view class="recharge" @tap="setShopCart">充值</view> -->
+      <button class="shareIt" type="primary" open-type="share" data-name="pageShare" id="share">分享</button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import nav from '../components/nav' // 底部导航
+import check from '../mixins/check'
+// import author from '../components/author' // 授权按钮
+export default class Addetails extends wepy.page {
+  mixins = [check]
+  config = {
+    'navigationBarTitleText': '广告详情'
+  };
+  // 生命组件ID
+  components = {
+    // 底部导航
+    nav: nav
+  };
+  // alias example
+  data = {
+    autoW: 0,
+    autoH: 0,
+    adImage: '',
+    image: '',
+    title: '',
+    id: '',
+    uuid: '',
+    total: 0
+    userInfo: null,
+    shopInfo: null
+  };
+
+  methods = {
+
+  };
+  async onLoad(options) {
+    this.adImage = options.ad
+    this.title = options.title
+    this.id = options.id
+    this.uuid = options.uuid
+    this.total = options.total
+    this.userInfo = this.$parent.globalData.userInfo
+    this.shopInfo = this.$parent.globalData.shopInfo
+  };
+  // 控制背景图大小
+  autoImage(e) {
+    // 获取图片的狂傲
+    var imgW = e.detail.width
+    var imgH = e.detail.height
+    // 计算图片比例
+    var imgScale = imgW / imgH
+    // 声明自适应宽高变量
+    var autoW = ''
+    var autoH = ''
+    // 获取屏幕宽度，并将图片设置为屏幕等宽
+    wx.getSystemInfo({
+      success: res => {
+        autoW = res.windowWidth
+        autoH = autoW / imgScale
+        this.autoW = autoW
+        this.autoH = autoH
+        this.$apply()
+      }
+    })
+  }
+  // 分享页面
+  onShareAppMessage(res) {
+    let url = `pages/index?share=${this.thisShare}&uuid=${this.uuid}`
+    return {
+      title: this.title,
+      desc: '',
+      // 图片路径
+      imageUrl: this.adImage,
+      path: url
+    }
+  };
+}
+</script>

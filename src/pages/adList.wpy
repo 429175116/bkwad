@@ -63,23 +63,23 @@
   <view>
     <view class="recharge">
       <repeat for="{{adList}}" key="index" index="index" item="item">
-        <view class="winDetail">
+        <view class="winDetail" data-index="{{index}}" @tap="goAdDetails">
           <view class="winDetail_img">
-            <image src="{{userInfo.avatarUrl}}" class=""/>
+            <image src="{{item.ad}}" class=""/>
           </view>
           <view class="winDetail_center">
-            <view>{{shopInfo.name}}</view>
-            <view class="winDetail_text">{{shopInfo.address}}</view>
+            <view>广告:{{item.title}}</view>
+            <view class="winDetail_text">店铺:{{item.name}}</view>
           </view>
           <view class="winDetail_right">
-            <view>{{item.date}}</view>
-            <view>{{item.time}}</view>
-            <view class="winDetail_title">{{item.in}}</view>
+            <view> </view>
+            <view>剩余金额:{{item.total}}</view>
+            <view class="winDetail_title"> </view>
           </view>
         </view>
       </repeat>
-      <view class="listMessage hide {{prompt==''?'show':''}}">已无更多数据</view>
-      <view class="listMessage hide {{listShow?'show':''}}">暂无列表数据</view>
+      <view class="listMessage" wx:if="{{nextUrl == ''}}">已无更多数据</view>
+      <view class="listMessage" wx:if="{{adList.length == 0}}">暂无列表数据</view>
     </view>
   </view>
 </template>
@@ -96,7 +96,8 @@ export default class Adlist extends wepy.page {
   data = {
     shopInfo: null,
     userInfo: null,
-    adList: null
+    adList: null,
+    nextUrl: ''
   };
   methods = {};
   onLoad() {
@@ -113,32 +114,19 @@ export default class Adlist extends wepy.page {
     })
     await wx.request({
       url: `${this.$parent.globalData.requestUrl}/ad/index`,
-      // url: `http://bkw_hongbao.test/api/ad/index`,
       method: 'POST',
       data: {
         code: this.code
       },
       success: data => {
         console.log(data);
-        // if (data.statusCode === 200) {
-        //   let adList = data.data.data
-        //   let allTime = ''
-        //   if (adList.length <= 0) {
-        //     this.listShow = true
-        //     this.$apply()
-        //     return
-        //   }
-        //   for (let i = 0; i < adList.length; i++) {
-        //     allTime = adList[i].created_at
-        //     allTime = allTime.split(' ')
-        //     adList[i]['date'] = allTime[0]
-        //     adList[i]['time'] = allTime[1]
-        //   }
-        //   this.adList = adList
-        //   this.$apply()
-        //   // 获取下一页的请求Id
-        //   this.getUrl = data.data.meta.pagination.links.next
-        // }
+        if (data.statusCode === 200) {
+          let adList = data.data.data
+          this.adList = adList
+          this.$apply()
+          // 获取下一页的请求Id
+          this.nextUrl = data.data.meta.pagination.links.next
+        }
       }
     })
   };
@@ -146,38 +134,36 @@ export default class Adlist extends wepy.page {
    * 页面上拉触底事件的处理函数
    */
   async onReachBottom() {
-    if (!this.getUrl) {
-      this.prompt = false
-      this.$apply()
+    if (!this.nextUrl) {
       return
     }
     await wepy.login().then(res => {
       this.code = res.code
     })
     await wx.request({
-      url: this.getUrl,
+      url: this.nextUrl,
       method: 'POST',
       data: {
         code: this.code
       },
       success: data => {
         if (data.statusCode === 200) {
-          let withdrawList = data.data.data
-          let allTime = ''
-          for (let i = 0; i < withdrawList.length; i++) {
-            allTime = withdrawList[i].created_at
-            allTime = allTime.split(' ')
-            withdrawList[i]['date'] = allTime[0]
-            withdrawList[i]['time'] = allTime[1]
-          }
+          let adList = data.data.data
           // 将新的请求结果加入原有数组  concat连接两个或更多的数组，并返回结果。
-          this.withdrawList = this.withdrawList.concat(withdrawList)
+          this.adList = this.adList.concat(adList)
           this.$apply()
           // 更新下一页请求地址
-          this.getUrl = data.data.meta.pagination.links.next
+          this.nextUrl = data.data.meta.pagination.links.next
         }
       }
     })
+  }
+  goAdDetails(e) {
+    let index = e.currentTarget.dataset.index
+    console.log(index)
+    console.log(this.adList[index])
+    let adData = this.adList[index]
+    this.$navigate(`/pages/adDetails?total=${adData.total}&ad=${adData.ad}&id=${adData.id}&title=${adData.title}&uuid=${adData.uuid}`)
   }
 }
 </script>

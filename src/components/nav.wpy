@@ -95,6 +95,9 @@
 .hidden {
   display: none;
 }
+.action{
+  color: #f86e09;
+}
 </style>
 <template>
 <!-- 原 bindtap="click" 替换为 @tap="click"，原catchtap="click"替换为@tap.stop="click"。
@@ -107,8 +110,8 @@
   <view class="footer">
     <view class="ft_item on">
       <view @tap="goIndex">
-        <image src="/img/index.png" />
-        <text class="text">活动详情</text>
+        <image src="/img/{{navImg[0]}}.png" />
+        <text class="text {{navAction[0]}}">活动详情</text>
       </view>
     </view>
     <!-- <view class="ft_item">
@@ -119,8 +122,8 @@
     </view> -->
     <view class="ft_item">
       <view @tap="goUser">
-        <image src="/img/user.png" />
-        <text class="text">个人中心</text>
+        <image src="/img/{{navImg[1]}}.png" />
+        <text class="text {{navAction[1]}}">个人中心</text>
       </view>
     </view>
   </view>
@@ -156,7 +159,9 @@ export default class Nav extends wepy.component {
     guangGaoNode: null,
     name: '',
     phone: '',
-    id: ''
+    id: '',
+    navImg: ['index1', 'user'],
+    navAction: ['action', 'noAction']
   };
   props = {
     // 静态传值
@@ -170,9 +175,13 @@ export default class Nav extends wepy.component {
   };
   methods = {
     goIndex() {
+      this.$parent.$parent.globalData.navImg = ['index1', 'user']
+      this.$parent.$parent.globalData.navAction = ['action', 'noAction']
       this.$emit('childFn', '/pages/index')
     },
     goUser() {
+      this.$parent.$parent.globalData.navImg = ['index', 'user1']
+      this.$parent.$parent.globalData.navAction = ['noAction', 'action']
       this.$emit('childFn', '/pages/user')
     },
     async goAppointment() {
@@ -271,6 +280,10 @@ export default class Nav extends wepy.component {
       })
     }
   };
-  onLoad() {};
+  onLoad() {
+    this.navImg = this.$parent.$parent.globalData.navImg
+    this.navAction = this.$parent.$parent.globalData.navAction
+    this.$apply()
+  };
 }
 </script>
