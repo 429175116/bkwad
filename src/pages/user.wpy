@@ -87,6 +87,11 @@
   float: left;
   font-size: 24rpx;
 }
+.gong button{
+  background-color: #fff;
+  padding: 0;
+  text-align:left;
+}
 button::after {
   border: none;
   border-radius: 0;
@@ -260,6 +265,11 @@ button::after {
         <text>钱包入账明细</text>
         <image src='/img/jiantou2.png' class="bottom_right"/>
       </view>
+      <button class="bottom" open-type="contact" session-from="weapp">
+        <image src='/img/tui.png' class="bottom_left" />
+        <text>意见反馈</text>
+        <image src='/img/jiantou2.png' class="bottom_right"/>
+      </button>
       <!-- <view @tap="orderList" class='bottom'>
         <image src='/img/order.png' class="bottom_left" />
         <text>我的预约</text>

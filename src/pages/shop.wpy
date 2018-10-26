@@ -228,7 +228,7 @@ button::after {
         <image src='/img/jiantou1.png' class="bottom_right" />
       </view>
       <view  @tap="goAdList" class='bottom'>
-        <image src='/img/tui.png' class="bottom_left" />
+        <image src='/img/order.png' class="bottom_left" />
         <text>广告列表</text>
         <image src='/img/jiantou1.png' class="bottom_right" />
       </view>

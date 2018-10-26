@@ -76,6 +76,12 @@
               当前红包余额
               <text class="money_text">{{hongbao}}</text>元
           </view>
+          <view class="balance">
+              单次提现金额最少为为5元
+          </view>
+          <view class="balance">
+              平台收取10%服务费
+          </view>
           <button formType="submit" class="btn">提现</button>
         </form>
     </view>
@@ -123,6 +129,14 @@ export default class Withdraw extends wepy.page {
         wepy.showModal({
           title: '',
           content: '请输入正确金额',
+          showCancel: false
+        })
+        return
+      }
+      if (upDataM < 5) {
+        wepy.showModal({
+          title: '',
+          content: '最少体现金额为5.00元',
           showCancel: false
         })
         return

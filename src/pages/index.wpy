@@ -77,6 +77,10 @@ button[type=primary] {
   right: 20rpx;
   text-align: center;
   padding: 0;
+  font-size: 0rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
 }
 
 .luckDraw_img {
@@ -93,17 +97,13 @@ button[type=primary] {
   bottom: 150rpx;
   right: 20rpx;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
 }
- .shareIt image {
+ .shareIt image, .service_img {
   width: 60rpx;
   height: 60rpx;
-  margin: 0;
-  vertical-align:middle;
-}
-.service_img {
-  width: 60rpx;
-  height: 60rpx;
-  margin-top: 15rpx;
   vertical-align:middle;
 }
 

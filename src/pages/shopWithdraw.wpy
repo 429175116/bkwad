@@ -73,6 +73,9 @@
               当前余额
               <text class="money_text">{{balance}}</text>元
           </view>
+          <view class="balance">
+              单次体现金额最少为为1.00元
+          </view>
           <button formType="submit" class="btn">提现</button>
         </form>
     </view>
@@ -125,12 +128,20 @@ export default class shopWithdraw extends wepy.page {
         })
         return
       }
+      if (upDataM < 1) {
+        wepy.showModal({
+          title: '',
+          content: '最少体现金额为1元',
+          showCancel: false
+        })
+        return
+      }
       upDataM = parseFloat(upDataM)
       balance = parseFloat(balance)
       if (upDataM > balance) {
         wepy.showModal({
           title: '',
-          content: '转化金额大于余额,不可转化',
+          content: '提现金额大于余额,不可转化',
           showCancel: false
         })
         return
@@ -174,7 +185,7 @@ export default class shopWithdraw extends wepy.page {
             this.$apply()
             wepy.showModal({
               title: '',
-              content: '提现成功',
+              content: '提现成功,请前往微信零钱查看',
               showCancel: false
             })
             // 两秒后返回上一页
