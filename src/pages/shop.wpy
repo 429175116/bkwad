@@ -210,14 +210,6 @@ button::after {
             充值
             <image src='/img/jiantou1.png' class="center_img" />
           </view>
-          <view class="center_top" style='text-align:center' @tap="goWithdraw">
-            提现
-            <image src='/img/jiantou1.png' class="center_img" />
-          </view>
-          <view class="center_rignt" @tap="balanceToReserve">
-            转换
-            <image src='/img/jiantou1.png' class="center_img" />
-          </view>
         </view>
       </view>
     </view>
@@ -252,11 +244,6 @@ button::after {
       <view  @tap="balanceList" class='bottom'>
         <image src='/img/order.png' class="bottom_left" />
         <text>余额明细</text>
-        <image src='/img/jiantou1.png' class="bottom_right" />
-      </view>
-      <view  @tap="reserveList" class='bottom'>
-        <image src='/img/order.png' class="bottom_left" />
-        <text>储蓄金明细</text>
         <image src='/img/jiantou1.png' class="bottom_right" />
       </view>
     </view>
@@ -412,21 +399,9 @@ export default class Shop extends wepy.page {
   balanceList() {
     this.$navigate('/pages/balanceList')
   };
-  // 储蓄金明细
-  reserveList() {
-    this.$navigate('/pages/reserveList')
-  };
-  balanceToReserve() {
-    // 进入余额转储蓄金页
-    this.$navigate('/pages/balanceToReserve')
-  };
   goRecharge() {
     // 进入商户充值页
     this.$navigate('/pages/shopRecharge')
-  };
-  goWithdraw() {
-    // 进入商户提现页
-    this.$navigate('/pages/shopWithdraw')
   };
   async onShow() {
     this.userInfo = this.$parent.globalData.userInfo
