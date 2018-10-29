@@ -194,10 +194,6 @@ button::after {
               <text class="userinfo-nickname">储蓄金</text>
               <text class="userinfo-nickname nickname">{{shopInfo.reserve}}元</text>
             </view>
-            <view>
-              <text class="userinfo-nickname">余额</text>
-              <text class="userinfo-nickname nickname">{{shopInfo.balance}}元</text>
-            </view>
           </block>
         </view>
       </view>
@@ -241,9 +237,9 @@ button::after {
         <text>中奖客户</text>
         <image src='/img/jiantou1.png' class="bottom_right" />
       </view> -->
-      <view  @tap="balanceList" class='bottom'>
+      <view  @tap="reserveList" class='bottom'>
         <image src='/img/order.png' class="bottom_left" />
-        <text>余额明细</text>
+        <text>储蓄金明细</text>
         <image src='/img/jiantou1.png' class="bottom_right" />
       </view>
     </view>
@@ -395,9 +391,9 @@ export default class Shop extends wepy.page {
   goAdvertising() {
     this.$navigate('/pages/advertising')
   };
-  // 余额明细
-  balanceList() {
-    this.$navigate('/pages/balanceList')
+  // 储蓄金明细
+  reserveList() {
+    this.$navigate('/pages/reserveList')
   };
   goRecharge() {
     // 进入商户充值页

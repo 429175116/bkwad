@@ -39,7 +39,7 @@
     float:right;
     width: 500rpx;
 }
-.balance {
+.reserve {
     margin: 40rpx 40rpx 0 40rpx;
     font-size: 24rpx;
 }
@@ -68,9 +68,9 @@
               ￥
               <input class="inputs" type='digit' name="upDataM" placeholder="输入充值金额" />
           </view>
-          <view class="balance">
+          <view class="reserve">
               当前余额
-              <text class="money_text">{{balance}}</text>元
+              <text class="money_text">{{reserve}}</text>元
           </view>
           <button formType="submit" class="btn">充值</button>
         </form>
@@ -98,7 +98,7 @@ export default class shopRecharge extends wepy.page {
     // 请求路径
     requestUrl: '',
     // 余额
-    balance: '',
+    reserve: '',
     loadingImgShow: false
   };
   methods = {
@@ -107,7 +107,7 @@ export default class shopRecharge extends wepy.page {
       // 提现金额
       var upDataM = event.detail.value.upDataM
       // 红包余额
-      var balance = this.balance
+      var reserve = this.reserve
       if (this.check.isNull(upDataM)) {
         wepy.showModal({
           title: '',
@@ -134,7 +134,7 @@ export default class shopRecharge extends wepy.page {
         return
       }
       upDataM = parseFloat(upDataM)
-      balance = parseFloat(balance)
+      reserve = parseFloat(reserve)
       await wepy.login().then(res => {
         this.code = res.code
       })
@@ -142,7 +142,7 @@ export default class shopRecharge extends wepy.page {
       this.loadingImgShow = true
       this.$apply()
       await wx.request({
-        url: `${this.$parent.globalData.requestUrl}/shop/balance_in`,
+        url: `${this.$parent.globalData.requestUrl}/shop/reserve_in`,
         method: 'POST',
         data: {
           code: this.code,
@@ -159,7 +159,7 @@ export default class shopRecharge extends wepy.page {
               // loading图片隐藏
               this.loadingImgShow = false
               this.$apply()
-              balance += upDataM
+              reserve += upDataM
               wepy.showModal({
                 title: '',
                 content: '充值成功',
@@ -178,7 +178,7 @@ export default class shopRecharge extends wepy.page {
               })
             }
           })
-          this.$parent.globalData.shopInfo.balance = balance
+          this.$parent.globalData.shopInfo.reserve = reserve
         }
       })
     }
@@ -187,7 +187,7 @@ export default class shopRecharge extends wepy.page {
     // 获取接口亲求路径
     this.requestUrl = this.$parent.globalData.requestUrl
     // 获取余额
-    this.balance = this.$parent.globalData.shopInfo.balance
+    this.reserve = this.$parent.globalData.shopInfo.reserve
     this.$apply()
   };
 }

@@ -198,6 +198,82 @@ button[type=primary] {
 .activity{
   width: 100%;
 }
+.getMoney{
+  position: fixed;
+  top: 300rpx;
+  left: 75rpx;
+  width: 600rpx;
+  height: 600rpx;
+}
+
+.getMoney image{
+  position: absolute;
+  width: 600rpx;
+  height: 600rpx;
+}
+.getMoney .infoShow{
+  position: absolute;
+  width: 360rpx;
+  height: 340rpx;
+  z-index: 1;
+  bottom: 0;
+  margin: 0 120rpx;
+}
+.hideGetMoneyImg{
+  position: absolute;
+  width: 50rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  z-index: 1;
+  top: 0;
+  right: 85rpx;
+  color: #fff;
+  text-align: center;
+}
+.infoShow .moneyTitle{
+  width: 100%;
+  font-size: 40rpx;
+  color: #fff;
+  text-align: center;
+}
+.infoShow .moneyShow{
+  width: 100%;
+  height: 170rpx;
+  font-size: 40rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.infoShow .moneyShow view:nth-child(1){
+  text-align: right;
+  font-size: 50rpx;
+  height: 170rpx;
+  line-height: 170rpx;
+}
+.infoShow .moneyShow view:nth-child(2){
+  text-align: left;
+  font-size: 20rpx;
+  height: 170rpx;
+  line-height: 190rpx;
+}
+.infoShow .button{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.infoShow .button  view{
+  width: 200rpx;
+  height: 80rpx;
+  border-radius: 30rpx;
+  font-size: 30rpx;
+  color: #fff;
+  background-color: #f29200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 <template>
   <view>
@@ -238,12 +314,26 @@ button[type=primary] {
         <image src="/img/phone.png" @tap="dialPhone" class="service_img" />
       </view>
     </view>
+    <!-- 红包领取提示 -->
+    <view class="getMoney" wx:if="{{titleMoneyImg}}">
+      <view class="hideGetMoneyImg"  @tap="hideGetMoneyImg">ⓧ</view>
+      <image src="/img/{{moneyImg}}.png" />
+      <view class="infoShow">
+        <view class="moneyTitle">恭喜获得红包</view>
+        <view class="moneyShow">
+          <view>{{getMoney}}</view>
+          <view>元</view>
+        </view>
+        <view class="button" @tap="walletIn">
+          <view>查看详情</view>
+        </view>
+      </view>
+    </view>
     <view>
       <button open-type="getUserInfo" class='{{authorizationButton}}' id='getUserInfo' lang="zh_CN" @getuserinfo="onGotUserInfo">{{time}}</button>
     </view>
     <nav :uuid.sync="uuid" @childFn.user="goPage" />
   </view>
-
 </template>
 
 
@@ -269,6 +359,27 @@ button[type=primary] {
 // });
 // this.$navigate(url)
 
+// 水平垂直居中
+// display: flex;
+// align-items: center;
+// justify-content: center;
+
+// 居右
+// flex-direction:row;
+// justify-content:flex-end
+
+// vertical-align:middle;
+
+// overflow:hidden;
+// text-overflow:ellipsis;
+// white-space:nowrap;
+
+// 自动换行
+// word-break:break-all;
+
+// overflow:hidden;
+// text-overflow:ellipsis;
+// white-space:nowrap;
 <script>
 import wepy from 'wepy'
 import nav from '../components/nav' // 底部导航
@@ -302,7 +413,10 @@ export default class Index extends wepy.page {
     uuid: null,
     time: '',
     indexloading: '',
-    shopInfoShow: false
+    shopInfoShow: false,
+    titleMoneyImg: false, // 控制红包提示图片显示
+    moneyImg: 'getMoneyBg', // 红包领取提示图片内容
+    getMoney: '0.00' // 获取红包金额
   };
 
   methods = {
@@ -458,16 +572,20 @@ export default class Index extends wepy.page {
               })
             }
             if (data.data.status_code !== 400) {
+              this.titleMoneyImg = true // 控制红包提示图片显示
+              this.moneyImg = 'getMoneyBg'  // 红包领取提示图片内容
+              this.getMoney = data.data.data[0]
+              this.$apply()
               wx.playBackgroundAudio({
                 dataUrl: `${this.$parent.globalData.imgUrl}/music/gold.mp3`,
                 title: '',
                 coverImgUrl: ''
               })
-              wx.showModal({
-                title: '',
-                content: `恭喜你获得了${data.data.data[0]}元红包，进入个人中心查看`,
-                showCancel: false
-              })
+              // wx.showModal({
+              //   title: '',
+              //   content: `恭喜你获得了${data.data.data[0]}元红包，进入个人中心查看`,
+              //   showCancel: false
+              // })
             }
           }
         })
@@ -489,6 +607,10 @@ export default class Index extends wepy.page {
       this.onGotUserInfo()
     }
   };
+  // 隐藏红包提示图片
+  hideGetMoneyImg() {
+    this.titleMoneyImg = false
+  }
   onLaunch() {
     wepy.login().then(res => {
       console.log('login: ', res)
@@ -577,6 +699,10 @@ export default class Index extends wepy.page {
   // 进入使用说明页
   goDescription() {
     this.$navigate('/pages/description')
+  };
+  // 钱包入账明细
+  walletIn() {
+    this.$navigate('/pages/userWalletIn')
   };
 }
 </script>
