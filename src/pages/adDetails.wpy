@@ -44,9 +44,83 @@
   min-height: 50rpx;
   line-height: 50rpx;
 }
+
+.winDetail {
+    width: 95%;
+    border: 1px solid #eee;
+    border-radius: 20rpx;
+    height: 110rpx;
+    margin: 10rpx 2.5%;
+    color: #333;
+    box-sizing: border-box;
+    padding: 10rpx 0;
+}
+
+.winDetail_img image {
+    width: 78rpx;
+    height: 78rpx;
+    float: left;
+    margin-left: 20rpx;
+    border-radius: 50%;
+    margin-top: 10rpx;
+}
+
+.winDetail_center {
+    float: left;
+    margin-left: 20rpx;
+    font-size: 40rpx;
+}
+
+.winDetail_center view {
+  font-size: 30rpx;
+    width: 300rpx;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+.winDetail_text {
+    font-size: 28rpx;
+    margin-top: 10rpx;
+}
+
+.winDetail_right {
+    float: right;
+    margin-right: 20rpx;
+    text-align: right;
+    font-size: 20rpx;
+    line-height: 35rpx;
+}
+.getMoneyList{
+  width: 100%;
+  max-height: 800rpx;
+  height: auto;
+  border: 1prx solid #000;
+}
 </style>
 <template>
   <view>
+    <scroll-view scroll-y class="getMoneyList">
+<!-- getMoneyList -->
+      <repeat for="{{getMoneyList}}" key="index" index="index" item="item">
+        <view class="winDetail" data-index="{{index}}">
+          <view class="winDetail_img">
+            <image src="{{item.user.avatar}}" class=""/>
+          </view>
+          <view class="winDetail_center">
+            <view>{{item.user.nick_name}}</view>
+            <view class="winDetail_text">{{title}}</view>
+          </view>
+          <view class="winDetail_right">
+            <view>{{item.in}}¥</view>
+            <view>{{item.created_at}}</view>
+            <view class="winDetail_title"> </view>
+          </view>
+        </view>
+      </repeat>
+      <view class="listMessage" wx:if="{{nextUrl != '' && getMoneyList.length != 0}}" @tap="getMoreList">显示更多</view>
+      <view class="listMessage" wx:if="{{nextUrl === '' && getMoneyList.length != 0}}">已无更多纪录,共{{allTotal}}人领取</view>
+      <view class="listMessage" wx:if="{{getMoneyList.length == 0}}">暂无领取纪录</view>
+    </scroll-view>
     <!-- 活动主图 -->
     <image src="{{adImage}}" style="width:{{autoW}}px;height:{{autoH}}px" bindload='autoImage' class="activity {{indexloading}}" />
     <view class="shopInfo">
@@ -87,7 +161,10 @@ export default class Addetails extends wepy.page {
     uuid: '',
     total: 0,
     userInfo: null,
-    shopInfo: null
+    shopInfo: null,
+    getMoneyList: null,
+    nextUrl: '',
+    allTotal: 0 // 共几人领取
   };
 
   methods = {
@@ -101,7 +178,62 @@ export default class Addetails extends wepy.page {
     this.total = options.total
     this.userInfo = this.$parent.globalData.userInfo
     this.shopInfo = this.$parent.globalData.shopInfo
+    this.getAdUserInfo()
   };
+  async getAdUserInfo() {
+    await wepy.login().then(res => {
+      this.code = res.code
+    })
+    await wx.request({
+      url: `${this.$parent.globalData.requestUrl}/shop/reserve_in_show_by_uuid`,
+      method: 'POST',
+      data: {
+        code: this.code,
+        uuid: this.uuid
+      },
+      success: data => {
+        if (data.statusCode === 200) {
+          let getMoneyList = data.data.data.data
+          this.getMoneyList = getMoneyList
+          this.allTotal = data.data.data.total
+          this.$apply()
+          // 获取下一页的请求Id
+          this.nextUrl = ''
+          this.nextUrl = data.data.next_page_url
+        }
+      }
+    })
+  };
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  async getMoreList() {
+    if (!this.nextUrl) {
+      return
+    }
+    await wepy.login().then(res => {
+      this.code = res.code
+    })
+    await wx.request({
+      url: this.nextUrl,
+      method: 'POST',
+      data: {
+        code: this.code,
+        uuid: this.uuid
+      },
+      success: data => {
+        if (data.statusCode === 200) {
+          let getMoneyList = data.data.data.data
+          // 将新的请求结果加入原有数组  concat连接两个或更多的数组，并返回结果。
+          this.getMoneyList = this.getMoneyList.concat(getMoneyList)
+          this.$apply()
+          // 更新下一页请求地址
+          this.nextUrl = ''
+          this.nextUrl = data.data.next_page_url
+        }
+      }
+    })
+  }
   // 控制背景图大小
   autoImage(e) {
     // 获取图片的狂傲

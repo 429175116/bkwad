@@ -78,12 +78,10 @@ export default class extends wepy.app {
       'pages/extensionList',
       'pages/grantList',
       'pages/turntable', // 抽奖
-      'pages/shopRecharge', // 余额充值
+      'pages/shopRecharge', // 储蓄金充值
       'pages/shopWithdraw', // 提现
-      'pages/balanceList', // 余额明细
       'pages/reserveList', // 储蓄金明细
-      'pages/balanceToReserve', // 余额转储蓄金
-      'pages/advertising', // 活动管理
+      'pages/advertising', // 新建广告
       'pages/userWalletIn', // 钱包入账明细
       'pages/userWalletOut', // 钱包出账明细
       'pages/newLottery', // 活动管理

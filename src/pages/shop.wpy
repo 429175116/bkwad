@@ -15,6 +15,7 @@
 }
 
 .top_border {
+  position: relative;
   border: 1px solid #fff;
   width: 98%;
   margin: 10rpx 1%;
@@ -44,6 +45,9 @@
 
 .nickname {
   font-size: 24rpx;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .top_right {
@@ -178,35 +182,37 @@ button::after {
   text-align: center;
   font-size: 30rpx;
 }
+.recharge{
+  position: absolute;
+  width: 200rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  border-radius: 30rpx;
+  background-color: #fff;
+  font-size: 30rpx;
+  color: #f86e09;
+  text-align: center;
+  left: 252rpx;
+  top: 189rpx;
+}
+  
 </style>
 <template>
   <view>
     <view class='users'>
       <view hover-class='none' class="top_border">
         <view class="userinfo">
-          <block>
-            <image @tap="setShopInfo" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover" />
-            <view> 
-              <text class="userinfo-nickname">店铺名称</text>
-              <text class="userinfo-nickname nickname">{{shopInfo.name}}</text>
-            </view>
-            <view>
-              <text class="userinfo-nickname">储蓄金</text>
-              <text class="userinfo-nickname nickname">{{shopInfo.reserve}}元</text>
-            </view>
-          </block>
-        </view>
-      </view>
-    </view>
-    <!-- 中间 -->
-    <view>
-      <view class="main_center">
-        <view class="center">
-          <view class="center_top" @tap="goRecharge">
-            充值
-            <image src='/img/jiantou1.png' class="center_img" />
+          <image @tap="setShopInfo" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover" />
+          <view> 
+            <text class="userinfo-nickname">店铺名称</text>
+            <text class="userinfo-nickname nickname">{{shopInfo.name}}</text>
+          </view>
+          <view>
+            <text class="userinfo-nickname">储蓄金</text>
+            <text class="userinfo-nickname nickname">{{shopInfo.reserve}}元</text>
           </view>
         </view>
+        <view class="recharge" @tap="goRecharge">储蓄金充值</view>
       </view>
     </view>
     <view class='gong'>

@@ -61,7 +61,7 @@
   <view class='recharge'>
     <view hover-class='none' class="recharge_border">
         <view class="pay_address">
-            <text>余额充值</text>
+            <text>储蓄金充值</text>
         </view>
         <form bindsubmit='upDataMoney'>
           <view class="money">
