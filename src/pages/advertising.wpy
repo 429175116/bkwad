@@ -103,6 +103,54 @@ width: 100%;
 height: 100%;
 opacity: 0;
 }
+
+.mask{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(242,142,2,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index:10;
+}
+.prompt{
+  width: 500rpx;
+  height: 368rpx;
+  background-color: #fff;
+  border-radius: 30rpx;
+}
+.promptInfo{
+  height: 250rpx;
+  line-height: 250rpx;
+  text-align: center;
+  color: #333;
+}
+.prompt .button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.button-hover[type=primary] {
+background-color: #f97008;
+}
+button[type=primary] {
+  color:#FFFFFF;
+  background-color: #f97008;
+}
+
+.shareIt{
+  width: 282rpx;
+  height: 120rpx;
+  line-height: 120rpx;
+  background-color: #f97008;
+  border: 2rpx solid #fff;
+  text-align: center;
+  padding: 0;
+  font-size: 30rpx;
+  color: #fff;
+}
 </style>
 <template>
   <view class="mask {{selected?'show':'hidden'}}">
@@ -140,6 +188,15 @@ opacity: 0;
           <button class="mod_btn" formType="submit">提交</button>
       </form>
     </view>
+    <view class="mask" wx:if="{{promptShow}}">
+      <view class="prompt">
+        <view class="promptInfo">广告创建成功,是否分享</view>
+        <view class="button">
+          <button class="shareIt" @tap="prompthide">取消</button>
+          <button class="shareIt" type="primary" open-type="share" data-name="pageShare" id="share">分享</button>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 <script>
@@ -162,7 +219,8 @@ export default class Advertising extends wepy.page {
     image: '',
     imgSize: 0,
     advertisingName: '',
-    money: ''
+    money: '',
+    promptShow: false
   };
   methods = {
     previewImage(e) {
@@ -171,6 +229,11 @@ export default class Advertising extends wepy.page {
         current: current,
         urls: this.data.pics
       })
+    },
+    prompthide() {
+      // 隐藏弹框
+      this.promptShow = false
+      this.$apply()
     },
     chooseImage() {
       wx.chooseImage({
@@ -295,15 +358,21 @@ export default class Advertising extends wepy.page {
         success: data => {
           if (data.statusCode === 201) {
             this.$parent.globalData.uuid = ''
-            wepy.showModal({
-              title: '',
-              content: '创建广告成功',
-              showCancel: false
-            })
-            // 两秒后返回上一页
-            setTimeout(e => {
-              wx.navigateBack({ changed: true })
-            }, 2000)
+            this.promptShow = true
+            data = JSON.parse(data.data)
+            this.title = data.data.title
+            this.adImage = data.data.ad
+            this.uuid = data.data.uuid
+            this.$apply()
+            // wepy.showModal({
+            //   title: '',
+            //   content: '创建广告成功',
+            //   showCancel: false
+            // })
+            // // 两秒后返回上一页
+            // setTimeout(e => {
+            //   wx.navigateBack({ changed: true })
+            // }, 2000)
             return
           }
           if (data.statusCode === 400) {
@@ -316,6 +385,17 @@ export default class Advertising extends wepy.page {
           }
         }
       })
+    }
+  };
+  // 分享页面
+  onShareAppMessage(res) {
+    let url = `pages/index?uuid=${this.uuid}`
+    return {
+      title: this.title,
+      desc: '',
+      // 图片路径
+      imageUrl: this.adImage,
+      path: url
     }
   };
   async onLoad() {

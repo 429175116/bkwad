@@ -257,7 +257,7 @@ export default class Addetails extends wepy.page {
   }
   // 分享页面
   onShareAppMessage(res) {
-    let url = `pages/index?share=${this.thisShare}&uuid=${this.uuid}`
+    let url = `pages/index?uuid=${this.uuid}`
     return {
       title: this.title,
       desc: '',

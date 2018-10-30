@@ -416,7 +416,7 @@ export default class Index extends wepy.page {
     shopInfoShow: false,
     titleMoneyImg: false, // 控制红包提示图片显示
     moneyImg: 'getMoneyBg', // 红包领取提示图片内容
-    getMoney: '0.00' // 获取红包金额
+    getMoney: 0.00 // 获取红包金额
   };
 
   methods = {
@@ -572,9 +572,10 @@ export default class Index extends wepy.page {
               })
             }
             if (data.data.status_code !== 400) {
+              this.getMoney = data.data.data[0]
+              this.$apply()
               this.titleMoneyImg = true // 控制红包提示图片显示
               this.moneyImg = 'getMoneyBg'  // 红包领取提示图片内容
-              this.getMoney = data.data.data[0]
               this.$apply()
               wx.playBackgroundAudio({
                 dataUrl: `${this.$parent.globalData.imgUrl}/music/gold.mp3`,
@@ -590,7 +591,7 @@ export default class Index extends wepy.page {
           }
         })
       })
-    }, 5000)
+    }, 1000)
   }
   async onLoad(options) {
     this.image = this.$parent.globalData.imgUrlMain

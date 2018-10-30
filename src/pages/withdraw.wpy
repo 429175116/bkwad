@@ -2,7 +2,7 @@
 .recharge {
     border: 2rpx solid gainsboro;
     width: 95%;
-    height: 550rpx;
+    height: 615rpx;
     position: relative;
     top: 20rpx;
     left: 2.5%;
@@ -16,7 +16,7 @@
     width: 98%;
     margin: 10rpx 1%;
     border-radius: 20rpx;
-    height: 530rpx;
+    height: 595rpx;
 }
 .pay_address{
     margin: 40rpx 40rpx 0 40rpx;
@@ -77,10 +77,7 @@
               <text class="money_text">{{hongbao}}</text>元
           </view>
           <view class="balance">
-              单次提现金额最少为为5元
-          </view>
-          <view class="balance">
-              平台收取10%服务费
+              单次提现金额最少为为5元，平台收取10%服务费
           </view>
           <button formType="submit" class="btn">提现</button>
         </form>

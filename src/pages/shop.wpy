@@ -208,11 +208,11 @@ button::after {
             <text class="userinfo-nickname nickname">{{shopInfo.name}}</text>
           </view>
           <view>
-            <text class="userinfo-nickname">储蓄金</text>
+            <text class="userinfo-nickname">广告金</text>
             <text class="userinfo-nickname nickname">{{shopInfo.reserve}}元</text>
           </view>
         </view>
-        <view class="recharge" @tap="goRecharge">储蓄金充值</view>
+        <view class="recharge" @tap="goRecharge">广告金充值</view>
       </view>
     </view>
     <view class='gong'>
@@ -245,7 +245,7 @@ button::after {
       </view> -->
       <view  @tap="reserveList" class='bottom'>
         <image src='/img/order.png' class="bottom_left" />
-        <text>储蓄金明细</text>
+        <text>广告金明细</text>
         <image src='/img/jiantou1.png' class="bottom_right" />
       </view>
     </view>
@@ -382,9 +382,9 @@ export default class Shop extends wepy.page {
     this.$navigate('/pages/shopUserLottery')
   };
   // 创建活动
-  newLottery() {
-    this.$navigate('/pages/newLottery')
-  };
+  // newLottery() {
+  //   this.$navigate('/pages/newLottery')
+  // };
   // 发放明细
   grantList() {
     this.$navigate('/pages/grantList')
@@ -397,7 +397,7 @@ export default class Shop extends wepy.page {
   goAdvertising() {
     this.$navigate('/pages/advertising')
   };
-  // 储蓄金明细
+  // 广告金明细
   reserveList() {
     this.$navigate('/pages/reserveList')
   };
