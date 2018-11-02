@@ -127,7 +127,7 @@
 import wepy from 'wepy'
 export default class ReserveInList extends wepy.page {
   config = {
-    'navigationBarTitleText': '储蓄金明细'
+    'navigationBarTitleText': '广告金明细'
   };
   // 生命组件ID
   components = {};

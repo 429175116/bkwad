@@ -263,13 +263,14 @@ button[type=primary] {
   align-items: center;
   justify-content: center;
 }
-.infoShow .button  view{
+.infoShow .button view, .infoShow .button button{
   width: 200rpx;
   height: 80rpx;
   border-radius: 30rpx;
   font-size: 30rpx;
   color: #fff;
   background-color: #f29200;
+  margin: 0 5rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -304,7 +305,7 @@ button[type=primary] {
         使用说明
       </view> -->
       <button class="shareIt" type="primary" open-type="share" data-name="pageShare" id="share">
-        <image src="/img/shareIt.png" @tap="dialPhone" class="service_img" />
+        <image src="/img/shareIt.png" class="service_img" />
       </button>
       <view class="luckDraw" @tap="goDescription">
         使用说明
@@ -315,6 +316,7 @@ button[type=primary] {
       </view>
     </view>
     <!-- 红包领取提示 -->
+    <!-- <view class="getMoney"> -->
     <view class="getMoney" wx:if="{{titleMoneyImg}}">
       <view class="hideGetMoneyImg"  @tap="hideGetMoneyImg">ⓧ</view>
       <image src="/img/{{moneyImg}}.png" />
@@ -324,8 +326,11 @@ button[type=primary] {
           <view>{{getMoney}}</view>
           <view>元</view>
         </view>
-        <view class="button" @tap="walletIn">
-          <view>查看详情</view>
+        <view class="button">
+          <view @tap="walletIn">查看</view>
+          <button type="primary" open-type="share" data-name="pageShare" id="share">
+            分享
+          </button>
         </view>
       </view>
     </view>
@@ -611,6 +616,7 @@ export default class Index extends wepy.page {
   // 隐藏红包提示图片
   hideGetMoneyImg() {
     this.titleMoneyImg = false
+    this.$apply()
   }
   onLaunch() {
     wepy.login().then(res => {
@@ -619,10 +625,11 @@ export default class Index extends wepy.page {
   };
   // 分享页面
   onShareAppMessage() {
-    let pages = getCurrentPages() // 获取加载的页面
-    let currentPage = pages[pages.length - 1] // 获取当前页面的对象
-    let url = currentPage.route // 当前页面url
-    url = `${url}?share=${this.thisShare}&uuid=${this.uuid}`
+    // let pages = getCurrentPages() // 获取加载的页面
+    // let currentPage = pages[pages.length - 1] // 获取当前页面的对象
+    // let url = currentPage.route // 当前页面url
+    let url = `pages/index?share=${this.thisShare}&uuid=${this.uuid}`
+    this.hideGetMoneyImg()
     return {
       title: this.title,
       desc: '',
@@ -703,6 +710,7 @@ export default class Index extends wepy.page {
   };
   // 钱包入账明细
   walletIn() {
+    this.hideGetMoneyImg()
     this.$navigate('/pages/userWalletIn')
   };
 }

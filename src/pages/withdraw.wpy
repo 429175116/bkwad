@@ -133,7 +133,7 @@ export default class Withdraw extends wepy.page {
       if (upDataM < 5) {
         wepy.showModal({
           title: '',
-          content: '最少体现金额为5.00元',
+          content: '最少提现金额为5.00元',
           showCancel: false
         })
         return

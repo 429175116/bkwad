@@ -255,9 +255,16 @@ export default class Addetails extends wepy.page {
       }
     })
   }
+  prompthide() {
+    // 隐藏弹框
+    this.promptShow = false
+    this.$apply()
+  }
   // 分享页面
   onShareAppMessage(res) {
     let url = `pages/index?uuid=${this.uuid}`
+    console.log(url)
+    // this.prompthide()
     return {
       title: this.title,
       desc: '',

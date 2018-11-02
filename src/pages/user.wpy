@@ -267,7 +267,7 @@ button::after {
       </view>
       <button class="bottom" open-type="contact" session-from="weapp">
         <image src='/img/tui.png' class="bottom_left" />
-        <text>意见反馈</text>
+        <text>提点建议吧</text>
         <image src='/img/jiantou2.png' class="bottom_right"/>
       </button>
       <!-- <view @tap="orderList" class='bottom'>

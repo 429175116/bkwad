@@ -117,7 +117,9 @@ export default class extends wepy.app {
     navImg: ['index1', 'user'],
     navAction: ['action', 'noAction']
   };
-
+  onLaunch(options) {
+    console.log(options)
+  }
   testFunctiong() {
     console.log('testFunctiong')
   }

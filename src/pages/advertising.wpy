@@ -120,6 +120,7 @@ opacity: 0;
   height: 368rpx;
   background-color: #fff;
   border-radius: 30rpx;
+  position: relative;
 }
 .promptInfo{
   height: 250rpx;
@@ -151,6 +152,14 @@ button[type=primary] {
   font-size: 30rpx;
   color: #fff;
 }
+.hidePrompt{
+  position: absolute;
+  right:15rpx;
+  top:10rpx;
+  color:#333;
+  font-size:40rpx;
+}
+
 </style>
 <template>
   <view class="mask {{selected?'show':'hidden'}}">
@@ -190,10 +199,11 @@ button[type=primary] {
     </view>
     <view class="mask" wx:if="{{promptShow}}">
       <view class="prompt">
+        <view class="hidePrompt" @tap="prompthide">ⓧ</view>
         <view class="promptInfo">广告创建成功,是否分享</view>
         <view class="button">
-          <button class="shareIt" @tap="prompthide">取消</button>
-          <button class="shareIt" type="primary" open-type="share" data-name="pageShare" id="share">分享</button>
+          <button class="shareIt" @tap="goIndex">返回首页</button>
+          <button class="shareIt" type="primary" open-type="share" data-name="pageShare" id="share">{{shareText}}</button>
         </view>
       </view>
     </view>
@@ -220,7 +230,11 @@ export default class Advertising extends wepy.page {
     imgSize: 0,
     advertisingName: '',
     money: '',
-    promptShow: false
+    promptShow: false,
+    title: '',
+    adImage: '',
+    uuid: '',
+    shareText: '分享'
   };
   methods = {
     previewImage(e) {
@@ -229,11 +243,6 @@ export default class Advertising extends wepy.page {
         current: current,
         urls: this.data.pics
       })
-    },
-    prompthide() {
-      // 隐藏弹框
-      this.promptShow = false
-      this.$apply()
     },
     chooseImage() {
       wx.chooseImage({
@@ -358,12 +367,13 @@ export default class Advertising extends wepy.page {
         success: data => {
           if (data.statusCode === 201) {
             this.$parent.globalData.uuid = ''
-            this.promptShow = true
             data = JSON.parse(data.data)
             this.title = data.data.title
             this.adImage = data.data.ad
             this.uuid = data.data.uuid
+            this.promptShow = true
             this.$apply()
+            // this.$navigate('/pages/index')
             // wepy.showModal({
             //   title: '',
             //   content: '创建广告成功',
@@ -387,9 +397,19 @@ export default class Advertising extends wepy.page {
       })
     }
   };
+  goIndex() {
+    this.$navigate('/pages/index')
+  }
+  prompthide() {
+    // 隐藏弹框
+    this.promptShow = false
+    this.$apply()
+  }
   // 分享页面
   onShareAppMessage(res) {
-    let url = `pages/index?uuid=${this.uuid}`
+    var url = `pages/index?uuid=${this.uuid}`
+    this.shareText = '继续分享'
+    this.$apply()
     return {
       title: this.title,
       desc: '',
