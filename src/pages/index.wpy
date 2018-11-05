@@ -569,10 +569,10 @@ export default class Index extends wepy.page {
           },
           success: data => {
             console.log(data)
-            if (data.data.status_code === 400 && data.data.message === '储备金不足') {
+            if (data.data.status_code === 400) {
               wx.showModal({
                 title: '',
-                content: `来晚啦，红包被已经领完啦`,
+                content: data.data.message,
                 showCancel: false
               })
             }
