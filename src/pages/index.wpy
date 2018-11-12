@@ -279,7 +279,7 @@ button[type=primary] {
 <template>
   <view>
     <!-- 活动主图 -->
-    <image src="{{image}}" style="width:{{autoW}}px;height:{{autoH}}px" bindload='autoImage' class="activity {{indexloading}}" />
+    <image src="{{image}}" bindtap="shareQRCodeImg" style="width:{{autoW}}px;height:{{autoH}}px" bindload='autoImage' class="activity {{indexloading}}" />
     <view class="shopInfo {{shopInfoShow?'show':'hidden'}}">
       <view class="shopName">{{shopName}}</view>
       <view @tap="dialPhone">电话:{{phone}}</view>
@@ -434,6 +434,13 @@ export default class Index extends wepy.page {
     goTurntable () {
       // 不销毁当前页{跳转} 可返回
       this.$navigate('/pages/turntable')
+    },
+    // 点击图片放大，长按后可操作
+    shareQRCodeImg(e) {
+      wx.previewImage({
+        current: [this.image], // 当前显示图片的http链接   
+        urls: [this.image] // 需要预览的图片http链接列表   
+      })
     },
     // 拨打商家电话
     dialPhone() {
